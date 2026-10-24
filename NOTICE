@@ -3,9 +3,9 @@ Copyright (c) 2026 ArtCraft Team and the FilmCraft contributors.
 Licensed under the MIT License or the Apache License, Version 2.0, at your option
 (LICENSE-MIT, LICENSE-APACHE).
 
-The ArtCraft name, wordmark and logos in docs/brand/ are trademarks of the ArtCraft Team. They are
-not open source and are not covered by the license above; their terms are in
-docs/brand/LICENSE-brand.txt.
+The ArtCraft name, wordmark and logos are trademarks of the ArtCraft Team. The wordmark and
+logo assets are omitted from this independent GMcut edition; the original trademark terms are
+preserved in docs/brand/LICENSE-brand.txt. This fork is not an official ArtCraft release.
 
 Third-party material
 
@@ -19,3 +19,9 @@ Builds made with craft-fonts (CRAFT_FONTS_DIR; all official releases) also embed
 https://github.com/storytold/craft-fonts/blob/main/ATTRIBUTION.md (BIZ UDPGothic, Shippori Mincho,
 BIZ UDMincho) — OFL-1.1. Their licence texts ship with the packages as OFL-<family>.txt.
 Public-domain film and NASA frames and CC0 music shown in README screenshots (docs/images/) — public domain / CC0-1.0. See ATTRIBUTION.md.
+
+GMcut modifications
+Copyright (c) 2026 Glory-yk. GMcut Rust integration is available under MIT OR Apache-2.0.
+The optional external Python analysis worker is under MIT (apps/filmcraft/gmcut_analysis/LICENSE).
+Silero VAD model is not included in the repository. Its MIT terms and pinned source are documented
+in apps/filmcraft/gmcut_analysis/THIRD_PARTY.md. No FFmpeg binary or code is bundled with this native edition.

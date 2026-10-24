@@ -676,8 +676,15 @@ mod tests {
         ctx.fonts_mut(|fonts| {
             let defs = fonts.definitions().clone();
             for (family, stack) in &defs.families {
-                // installed right-to-left faces (Hebrew is not in craft-fonts) come after the craft run
-                let stack: Vec<&String> = stack.iter().filter(|n| !crate::rtl::is_system_face(n)).collect();
+                // Chinese, Korean and right-to-left system fallbacks follow the Japanese craft run.
+                let first_craft = stack.iter().position(|n| n.starts_with("craft:")).unwrap_or(stack.len());
+                for (index, name) in stack.iter().enumerate() {
+                    if matches!(name.as_str(), "system-chinese" | "system-korean") {
+                        assert!(first_craft < index, "Japanese must precede {name}: {stack:?}");
+                    }
+                }
+                let stack: Vec<&String> =
+                    stack.iter().filter(|n| !crate::rtl::is_system_face(n) && !matches!(n.as_str(), "system-chinese" | "system-korean")).collect();
                 let first = stack.iter().position(|n| n.starts_with("craft:")).unwrap_or(stack.len());
                 assert!(first > 0 && stack[first..].iter().all(|n| n.starts_with("craft:")), "{family:?}: {stack:?}");
                 let first_japanese = stack.iter().find(|n| n.starts_with("craft:BIZ") || n.starts_with("craft:Shippori"));

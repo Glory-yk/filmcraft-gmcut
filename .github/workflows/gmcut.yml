@@ -1,0 +1,27 @@
+name: GMcut source checks
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Portable package checks (no model download)
+        run: python -m unittest discover -s packaging/gmcut -p 'test_*.py'
+      - name: Install Rust 1.95.0
+        run: rustup toolchain install 1.95.0 --profile minimal --component rustfmt
+      - name: Format
+        run: cargo +1.95.0 fmt --check
+      - name: GMcut regressions
+        run: |
+          cargo +1.95.0 test --locked -p filmcraft-engine gmcut
+          cargo +1.95.0 test --locked -p filmcraft-ui-egui --test gmcut_ui
+          cargo +1.95.0 test --locked -p filmcraft gmcut_analyzer

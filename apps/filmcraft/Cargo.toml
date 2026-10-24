@@ -21,6 +21,7 @@ neural-voices = ["filmcraft-engine/neural-voices"]
 filmcraft-engine = { workspace = true }
 filmcraft-export = { workspace = true }
 filmcraft-project = { workspace = true }
+filmcraft-speech = { workspace = true }
 filmcraft-render = { workspace = true }
 filmcraft-time = { workspace = true }
 filmcraft-gpu = { workspace = true }
@@ -29,6 +30,7 @@ filmcraft-platform = { workspace = true }
 egui = { workspace = true }
 eframe = { workspace = true, features = ["default_fonts", "wgpu", "accesskit", "wayland", "x11"] }
 serde_json = { workspace = true }
+serde = { workspace = true }
 log = { workspace = true }
 rfd = { workspace = true }
 cpal = "0.16"

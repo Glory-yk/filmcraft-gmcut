@@ -495,6 +495,9 @@ pub struct UiState {
     /// Text panel: active tab ("Transcript" / "Captions" / "Graphics").
     #[serde(default = "captions_tab")]
     pub text_tab: String,
+    /// GM컷 preferences do not modify the project or replace other panel settings.
+    #[serde(default)]
+    pub gmcut: GmcutUi,
     /// Text panel: caption search filter.
     #[serde(default)]
     pub caption_search: String,
@@ -948,6 +951,34 @@ fn shown() -> bool {
     true
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(default, rename_all = "camelCase")]
+pub struct GmcutUi {
+    pub min_seconds: f64,
+    pub keep_seconds: f64,
+    pub presets: [f64; 3],
+    pub sensitivity: String,
+    #[serde(skip)]
+    pub status: String,
+    #[serde(skip)]
+    pub auto_pending: bool,
+    #[serde(skip)]
+    pub preview: Option<crate::panels::gmcut::PreviewPlayback>,
+}
+impl Default for GmcutUi {
+    fn default() -> Self {
+        Self {
+            min_seconds: 0.05,
+            keep_seconds: 0.0,
+            presets: [0.0, 0.2, 0.3],
+            sensitivity: "normal".into(),
+            status: String::new(),
+            auto_pending: false,
+            preview: None,
+        }
+    }
+}
+
 fn captions_tab() -> String {
     "Captions".into()
 }
@@ -990,6 +1021,7 @@ impl Default for UiState {
             tts: Default::default(),
             export: Default::default(),
             text_tab: captions_tab(),
+            gmcut: GmcutUi::default(),
             caption_search: String::new(),
             transcript_sel: None,
             transcript_search: String::new(),

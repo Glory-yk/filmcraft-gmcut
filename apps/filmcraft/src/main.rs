@@ -31,6 +31,7 @@ mod control_server;
 #[cfg(target_os = "linux")]
 mod dev_icon;
 mod file_filters;
+mod gmcut_analyzer;
 mod graphics;
 mod logging;
 #[cfg(target_os = "macos")]
@@ -205,6 +206,10 @@ fn app_creator(launch: Launch, graphics: graphics::GraphicsStart, created: Arc<A
             }),
         );
         let mut session = Session::default();
+        match gmcut_analyzer::GmCutAnalyzer::from_env() {
+            Ok(analyzer) => session.gmcut_analyzer = Some(Arc::new(analyzer)),
+            Err(error) => log::warn!("GM컷 analysis unavailable: {error}"),
+        }
         if let Some(dir) = data_dir.clone().or_else(default_data_dir) {
             let mut cfg = AutosaveConfig::new(dir);
             cfg.local_offset = local_offset;

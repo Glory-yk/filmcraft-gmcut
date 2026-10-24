@@ -57,6 +57,9 @@ macro_rules! uic {
 /// Frontend commands added for keyboard parity. Panel-scoped keys are in the shortcut tables
 /// (`FILMCRAFT_PANEL`), so they have no application-wide default here.
 pub const COMMANDS: &[UiCommand] = &[
+    uic!("gmcut.import", "GM컷 영상·음성 가져오기", [], None),
+    uic!("playback.gmcutPreview", "GM컷 영상·음성 미리보기", [], None),
+    uic!("playback.gmcutOriginal", "GM컷 원본 듣기", [], None),
     uic!("window.maximizeFrame", "Maximize or Restore Active Frame", [], Some("Shift+`")),
     uic!("window.maximizeFrameUnderCursor", "Maximize or Restore Frame Under Cursor", [], Some("`")),
     uic!("window.toggleFullScreen", "Toggle Full Screen", [], Some("Ctrl+`")),
@@ -145,6 +148,9 @@ pub fn route(app: &mut FilmcraftApp, ctx: &egui::Context, id: &str, params: &Val
         return None;
     }
     let r = match id {
+        "gmcut.import" => super::gmcut::import_media(app, params),
+        "playback.gmcutPreview" => super::gmcut::preview(app, ctx, params),
+        "playback.gmcutOriginal" => super::gmcut::original(app, params),
         "window.maximizeFrame" => Ok(toggle_maximize(app, app.ui.focused)),
         "window.maximizeFrameUnderCursor" => {
             let p =

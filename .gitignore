@@ -6,3 +6,24 @@ plan/
 .DS_Store
 .claude/worktrees/
 __pycache__/
+
+# GMcut local runtime, models and user media
+.venv/
+.gmcut-data/
+.gmcut-runtime/
+*.jit
+*.pcm
+*.fcproj
+*.fcproject
+!**/fixtures/*.fcproj
+.env
+.env.*
+uploads/
+exports/
+*.onnx
+*.mp4
+*.mov
+*.mkv
+*.mp3
+*.wav
+*.m4a

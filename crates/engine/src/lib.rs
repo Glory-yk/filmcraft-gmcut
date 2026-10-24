@@ -20,6 +20,7 @@ pub mod demo;
 pub mod doc_path;
 pub mod essential_sound;
 pub mod export_tools;
+pub mod gmcut;
 pub mod graphic_templates;
 pub mod graphics;
 pub mod interchange;
@@ -437,6 +438,8 @@ pub struct Session {
     /// Speech recogniser for `transcript.generate` (None = the Whisper model named by the command,
     /// feature `whisper`). Hosts and tests install one here.
     pub transcriber: Option<Arc<dyn filmcraft_speech::Transcriber>>,
+    pub gmcut_analyzer: Option<Arc<dyn filmcraft_speech::Transcriber>>,
+    pub gmcut: Option<gmcut::Plan>,
     /// The Events panel log: failed commands, job results, auto-save errors, messages.
     pub log: panels::EventLog,
     /// Media Browser navigation (directory, back / forward history, selected files).
@@ -535,6 +538,8 @@ impl Session {
             export_queue: Default::default(),
             stepped: Vec::new(),
             transcriber: None,
+            gmcut_analyzer: None,
+            gmcut: None,
             log: Default::default(),
             browser: Default::default(),
             exec_depth: 0,
@@ -622,6 +627,7 @@ impl Session {
     /// Apply worker notifications (call regularly, e.g. once per UI frame). Also applies the
     /// results of finished proxy / ingest jobs.
     pub fn poll_persistence(&mut self) {
+        gmcut::poll(self);
         proxies::poll(self);
         masks::poll(self);
         scene_detect::poll(self);

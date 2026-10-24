@@ -179,6 +179,31 @@ pub fn targets_source(app: &FilmcraftApp, params: &Value) -> bool {
 
 /// Execute a UI or engine command by id.
 pub fn invoke(app: &mut FilmcraftApp, ctx: &egui::Context, id: &str, mut params: Value) -> Result<Value, String> {
+    // macOS sends menu accelerators through the command inbox before egui sees keys.
+    let id = if id == "edit.undo" && crate::panels::gmcut::reviewing(app) {
+        if ctx.text_edit_focused() {
+            ctx.input_mut(|input| {
+                if !input.events.iter().any(|event| matches!(event, egui::Event::Key { key: egui::Key::Z, pressed: true, .. })) {
+                    input.events.push(egui::Event::Key {
+                        key: egui::Key::Z,
+                        physical_key: None,
+                        pressed: true,
+                        repeat: false,
+                        modifiers: egui::Modifiers::COMMAND,
+                    });
+                }
+            });
+            return Ok(Value::Null);
+        }
+        app.stop();
+        ctx.input_mut(|input| input.events.retain(|event| !matches!(event, egui::Event::Key { key: egui::Key::Z, pressed: true, .. })));
+        if !crate::panels::gmcut::undo_available(app) {
+            return Ok(Value::Null);
+        }
+        "gmcut.undo"
+    } else {
+        id
+    };
     if id == "edit.selectAll" && (crate::panels::graphics::select_all_edited_text(app) || crate::panels::effect_controls::select_all_keyframes(app)) {
         return Ok(Value::Null);
     }
@@ -691,6 +716,9 @@ pub fn menu_items(app: &FilmcraftApp) -> Vec<MenuItem> {
     let mut v = menu_items_for(&app.session);
     for it in &mut v {
         it.label = app.ui.language.tr(&it.label).to_string();
+        if it.id == "edit.undo" && crate::panels::gmcut::reviewing(app) {
+            it.enabled = crate::panels::gmcut::undo_available(app);
+        }
         match it.id.as_str() {
             "app.language.english" => it.checked = Some(app.ui.language == crate::i18n::Language::En),
             "app.language.japanese" => it.checked = Some(app.ui.language == crate::i18n::Language::Ja),

@@ -30,7 +30,6 @@ macro_rules! tlf {
 }
 
 pub mod automation;
-pub mod brand;
 pub mod calc;
 mod cjk;
 pub mod control;
@@ -965,7 +964,7 @@ impl FilmcraftApp {
     // ---------------------------------------------------------------- playback
 
     pub fn toggle_play(&mut self, speed: f64) {
-        if self.playback.playing {
+        if self.playback.playing || self.ui.gmcut.preview.is_some() {
             self.stop();
         } else {
             self.play(speed);
@@ -973,6 +972,9 @@ impl FilmcraftApp {
     }
 
     pub fn play(&mut self, speed: f64) {
+        if self.ui.gmcut.preview.is_some() {
+            self.stop();
+        }
         self.stop_source();
         if self.session.active_sequence().is_none() {
             return;
@@ -1050,7 +1052,36 @@ impl FilmcraftApp {
         Ok(seconds)
     }
 
+    /// Audio master clock for a non-destructive GM컷 preview; Program video follows the same cuts.
+    pub fn play_gmcut_preview(&mut self) -> Result<f64, String> {
+        let audio: Arc<filmcraft_engine::gmcut::Preview> =
+            self.session.gmcut.as_ref().and_then(|plan| plan.preview.clone()).ok_or("GM컷 미리보기 음성이 없습니다")?;
+        self.stop_source();
+        self.stop();
+        let a = self.audio.as_mut().ok_or("no audio output")?;
+        let sr = a.sample_rate().max(1);
+        let step = f64::from(audio.sample_rate) / f64::from(sr);
+        let seconds = audio.channels.first().map(Vec::len).unwrap_or(0) as f64 / f64::from(audio.sample_rate.max(1));
+        let mut pos = 0f64;
+        a.start(Box::new(move |buf: &mut [f32], ch: usize| {
+            for frame in buf.chunks_mut(ch.max(1)) {
+                let i = pos as usize;
+                let fraction = (pos - i as f64) as f32;
+                for (c, out) in frame.iter_mut().enumerate() {
+                    let channel = audio.channels.get(c).or_else(|| audio.channels.first());
+                    let x = channel.and_then(|c| c.get(i)).copied().unwrap_or(0.);
+                    let y = channel.and_then(|c| c.get(i.saturating_add(1))).copied().unwrap_or(0.);
+                    *out = x + (y - x) * fraction;
+                }
+                pos += step;
+            }
+        }))?;
+        self.playback.audio_clock = false;
+        Ok(seconds)
+    }
+
     pub fn stop(&mut self) {
+        self.ui.gmcut.preview = None;
         self.playback.playing = false;
         self.playback.stop_at = None;
         self.playback.rest_at = None;
@@ -1526,6 +1557,9 @@ impl FilmcraftApp {
             self.bindings = menus::bindings(self);
             self.bindings_rev = self.session.shortcuts.revision;
         }
+        if self.dialog.is_none() && panels::gmcut::handle_shortcuts(self, ctx) {
+            return;
+        }
         // A pane divider or floating-panel grip keeps focus after a pointer drag so arrows can
         // nudge it, but it takes no other key: Space and the other shortcuts keep working (#1482).
         let divider_focused = self.divider_focused(ctx);
@@ -1833,9 +1867,12 @@ impl FilmcraftApp {
         self.begin_press(&ctx);
         self.handle_shortcuts(&ctx);
         self.sync_native_menu();
+        panels::gmcut::advance_preview(self, &ctx);
         self.advance_playback(&ctx);
         self.advance_source_playback(&ctx);
-        self.scrub_audio(&ctx);
+        if self.ui.gmcut.preview.is_none() {
+            self.scrub_audio(&ctx);
+        }
         // Text to Speech: a selected narration clip loads into the panel
         panels::tts::follow_selection(self);
         if self.ui.tts.pending.is_some() || self.ui.tts.download_job.is_some() {

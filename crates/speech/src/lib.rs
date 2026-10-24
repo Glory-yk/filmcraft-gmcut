@@ -86,12 +86,26 @@ impl Default for Options {
 /// Progress callback: `(fraction 0..1, status)`; return `false` to cancel.
 pub type ProgressFn<'a> = &'a mut dyn FnMut(f32, &str) -> bool;
 
+/// Media-time GM컷 bounds from the shared two-pass VAD and RMS analyzer.
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct GmCutCandidate {
+    pub start: Tick,
+    pub end: Tick,
+    pub pause_start: Tick,
+    pub pause_end: Tick,
+    pub whole_only: bool,
+}
+
 /// A speech recogniser.
 pub trait Transcriber: Send + Sync {
     /// Stable id of the model (`"whisper-base"`), stored in the transcript's `source`.
     fn id(&self) -> String;
     /// Transcribe mono 16 kHz `audio`. Word times are relative to the first sample.
     fn transcribe(&self, audio: &[f32], opts: &Options, progress: ProgressFn) -> Result<Transcript, SpeechError>;
+    /// Analyze mono 16 kHz PCM without changing normal speech-recognition behavior.
+    fn gmcut_candidates(&self, _: &[f32], _: f64, _: &str, _: filmcraft_time::FrameRate, _: ProgressFn) -> Result<Vec<GmCutCandidate>, SpeechError> {
+        Err(SpeechError::Unavailable("this recogniser has no GM컷 analyzer".into()))
+    }
 }
 
 /// A transcriber that returns a fixed transcript (tests, demos and agents that bring their own

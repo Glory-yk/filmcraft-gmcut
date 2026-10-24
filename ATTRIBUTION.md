@@ -131,23 +131,11 @@ carry each font's licence as `OFL-<family>.txt`.
 | Shippori Mincho Regular (FONTDASU) | Japanese fallback for serif titles (native builds) | OFL-1.1 |
 | BIZ UDMincho Regular (Morisawa) | Japanese fallback for serif titles (native builds) | OFL-1.1 |
 
-## First-party brand marks
+## Upstream brand marks
 
-The ArtCraft name, wordmark and logos are trademarks of the ArtCraft Team. They are not open source and
-are not covered by the project licence; they may be used only unmodified and only in the context of
-FilmCraft, under [`docs/brand/LICENSE-brand.txt`](docs/brand/LICENSE-brand.txt). Forks and modified versions must
-remove them (AGENTS.md §1.8).
-
-| File | Author | Source | Licence |
-|---|---|---|---|
-| `docs/brand/artcraft-logo-white.png` | ArtCraft Team | Original work: first-party ArtCraft brand mark (ArtCraft wordmark, light ink for dark backgrounds) | ArtCraft trademark, not open source; `docs/brand/LICENSE-brand.txt` (not MIT/Apache) |
-| `docs/brand/artcraft-logo-white.svg` | ArtCraft Team | Original work: first-party ArtCraft brand mark (ArtCraft wordmark, light ink for dark backgrounds) | ArtCraft trademark, not open source; `docs/brand/LICENSE-brand.txt` (not MIT/Apache) |
-| `docs/brand/artcraft-logo.png` | ArtCraft Team | Original work: first-party ArtCraft brand mark (ArtCraft wordmark (symbol + "ARTCRAFT"), dark ink for light backgrounds) | ArtCraft trademark, not open source; `docs/brand/LICENSE-brand.txt` (not MIT/Apache) |
-| `docs/brand/artcraft-logo.svg` | ArtCraft Team | Original work: first-party ArtCraft brand mark (ArtCraft wordmark (symbol + "ARTCRAFT"), dark ink for light backgrounds) | ArtCraft trademark, not open source; `docs/brand/LICENSE-brand.txt` (not MIT/Apache) |
-| `docs/brand/artcraft-mark-black.png` | ArtCraft Team | Original work: first-party ArtCraft brand mark (ArtCraft symbol ("A" mark), black) | ArtCraft trademark, not open source; `docs/brand/LICENSE-brand.txt` (not MIT/Apache) |
-| `docs/brand/artcraft-mark-black.svg` | ArtCraft Team | Original work: first-party ArtCraft brand mark (ArtCraft symbol ("A" mark), black) | ArtCraft trademark, not open source; `docs/brand/LICENSE-brand.txt` (not MIT/Apache) |
-| `docs/brand/artcraft-mark.png` | ArtCraft Team | Original work: first-party ArtCraft brand mark (ArtCraft symbol ("A" mark), blue) | ArtCraft trademark, not open source; `docs/brand/LICENSE-brand.txt` (not MIT/Apache) |
-| `docs/brand/artcraft-mark.svg` | ArtCraft Team | Original work: first-party ArtCraft brand mark (ArtCraft symbol ("A" mark), blue) | ArtCraft trademark, not open source; `docs/brand/LICENSE-brand.txt` (not MIT/Apache) |
+The ArtCraft wordmark and logo assets are omitted from this independent modified edition,
+in accordance with the upstream trademark terms in [docs/brand/LICENSE-brand.txt](docs/brand/LICENSE-brand.txt).
+Original copyright notices and permissively licensed FilmCraft assets remain attributed above.
 
 ## Third-party source code
 
@@ -168,3 +156,11 @@ SHA-256 (`crates/speech/src/models.rs`, `docs/transcripts.md`).
 | Asset | Author | Source | Licence |
 |---|---|---|---|
 | Whisper tiny / base / small speech-recognition weights (`model.safetensors`, `config.json`, `generation_config.json`, `tokenizer.json`) | OpenAI | `https://huggingface.co/openai/whisper-{tiny,base,small}` (revisions `169d4a43…`, `e37978b9…`, `973afd24…`); weights released with `https://github.com/openai/whisper` | MIT (weights and code, github.com/openai/whisper); the Hugging Face conversion is labelled Apache-2.0 |
+
+## Optional GMcut model (local bundle only)
+
+The model is not tracked in this repository. The local bundle builder creates its attribution sidecar and includes the MIT license.
+
+| Local bundle asset | Author | Source | License |
+| --- | --- | --- | --- |
+| `Contents/Resources/gmcut_analysis/silero_vad.jit` | Silero Team | snakers4/silero-vad `1e261b036686cd0017d500ee96acd1c4ba572a9d`, user-supplied cache | MIT; `apps/filmcraft/gmcut_analysis/LICENSES/silero-vad-MIT.txt` |

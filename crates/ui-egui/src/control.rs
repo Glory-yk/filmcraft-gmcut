@@ -124,6 +124,23 @@ pub fn handle(app: &mut FilmcraftApp, ctx: &egui::Context, req: &ControlRequest)
             ok(serde_json::to_value(app.auto.query(prefix)).unwrap_or_default())
         }
         "ui.set" => {
+            if let Some(patch) = p.get("gmcut") {
+                let mut current = serde_json::to_value(&app.ui.gmcut).unwrap_or_default();
+                merge(&mut current, patch);
+                match serde_json::from_value::<crate::state::GmcutUi>(current) {
+                    Ok(draft)
+                        if draft.min_seconds.is_finite()
+                            && (0.05..=20.0).contains(&draft.min_seconds)
+                            && std::iter::once(&draft.keep_seconds)
+                                .chain(draft.presets.iter())
+                                .all(|seconds| seconds.is_finite() && (0.0..=10.0).contains(seconds))
+                            && ["quiet", "normal", "sensitive"].contains(&draft.sensitivity.as_str()) =>
+                    {
+                        app.ui.gmcut = draft
+                    }
+                    _ => return err("GM컷 최소 무음은 0.05~20초, 유지 시간은 0~10초, 민감도는 quiet/normal/sensitive여야 합니다"),
+                }
+            }
             // Text to Speech panel draft (voice, pitch, pace, text…), merged into the current one
             if let Some(patch) = p.get("tts") {
                 let mut cur = serde_json::to_value(&app.ui.tts).unwrap_or_default();

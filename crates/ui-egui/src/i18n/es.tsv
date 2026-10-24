@@ -3617,3 +3617,12 @@
 	Open a sequence to search its graphics	Abre una secuencia para buscar en sus gráficos
 	No text graphics in this sequence. Add text with the Type tool.	Esta secuencia no tiene gráficos con texto. Añade texto con la herramienta Texto.
 	No matching text.	Ningún texto coincide.
+# GM컷 workspace and review commands.
+	Apply GM컷	Aplicar GM컷
+	GM컷	GM컷
+	GM컷 검토	Revisión de GM컷
+	GM컷 영상·음성 가져오기	Importar video y audio en GM컷
+	GM컷 영상·음성 미리보기	Previsualizar video y audio de GM컷
+	GM컷 원본 듣기	Escuchar el audio original de GM컷
+	Gmcut	GM컷
+	Independent GM컷 edition based on FilmCraft 0.10.0.	Edición independiente de GM컷 basada en FilmCraft 0.10.0.

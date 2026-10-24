@@ -170,6 +170,7 @@ fn save_switch_reset_rename_delete_and_restart() {
             "Cutting",
             "Editing",
             "Effects",
+            "GM컷",
             "Learning",
             "Review",
             "Reset to Saved Layout",

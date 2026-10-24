@@ -3616,3 +3616,12 @@
 	Open a sequence to search its graphics	シーケンスを開くとグラフィックスを検索できます
 	No text graphics in this sequence. Add text with the Type tool.	このシーケンスにはテキストのグラフィックスがありません。文字ツールでテキストを追加してください。
 	No matching text.	一致するテキストはありません。
+# GM컷 workspace and review commands.
+	Apply GM컷	GM컷 を適用
+	GM컷	GM컷
+	GM컷 검토	GM컷 レビュー
+	GM컷 영상·음성 가져오기	GM컷 用の映像・音声を読み込み
+	GM컷 영상·음성 미리보기	GM컷 の映像・音声をプレビュー
+	GM컷 원본 듣기	GM컷 の元音声を再生
+	Gmcut	GM컷
+	Independent GM컷 edition based on FilmCraft 0.10.0.	FilmCraft 0.10.0 をベースにした独立版 GM컷 です。
